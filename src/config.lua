@@ -1,10 +1,8 @@
--- config.lua
-
 local manifest = require("manifest")
 
 local config = {}
 
-config.target = "lua"  -- "lua", "luau", or "glua"
+config.target = "luau"
 
 config.settings = {
     output_suffix = manifest.output.suffix,
@@ -23,37 +21,53 @@ end
 
 function config.get(key)
     local keys = {}
-    for k in key:gmatch("[^.]+") do table.insert(keys, k) end
+
+    for k in key:gmatch("[^.]+") do
+        table.insert(keys, k)
+    end
 
     local value = config
+
     for _, k in ipairs(keys) do
         value = value[k]
+
         if value == nil then
             return nil
         end
     end
+
     return value
 end
 
 function config.set(key, new_value)
     local keys = {}
-    for k in key:gmatch("[^.]+") do table.insert(keys, k) end
+
+    for k in key:gmatch("[^.]+") do
+        table.insert(keys, k)
+    end
+
+    if #keys == 0 then
+        return false
+    end
 
     local value = config
+
     for i = 1, #keys - 1 do
         value = value[keys[i]]
-        if value == nil then
+
+        if value == nil or type(value) ~= "table" then
             return false
         end
     end
 
     local last_key = keys[#keys]
+
     if value[last_key] ~= nil or last_key == "watermark_module_file" then
         value[last_key] = new_value
         return true
-    else
-        return false
     end
+
+    return false
 end
 
 return config
