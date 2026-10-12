@@ -1,4 +1,4 @@
- local manifest = {}
+local manifest = {}
 
 manifest.version = 1
 
