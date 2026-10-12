@@ -1,59 +1,15 @@
---[[
-Hercules Obfuscator manifest
-
-This file is the single source of truth for obfuscation module metadata. The
-runtime pipeline, CLI flag parser, and external consumers such as Hercules-API
-must derive module information from this manifest instead of duplicating it.
-
-Top-level keys:
-- version: Schema version for external consumers.
-- output: Global output defaults.
-- modules: Ordered module metadata. The table order is not semantically
-  important; use bit_position for API bitkeys and pipeline_order for execution.
-- presets: Named method sets exposed by the API and CLI consumers.
-- language_detection: Weighted Lua/Luau/GLua detection patterns. `pattern` is a
-  Python-compatible regex for API consumers; `lua_pattern` or `lua_patterns` are
-  Lua patterns used by this CLI.
-
-output keys:
-- suffix: Default suffix for generated files when not overwriting.
-- watermark_enabled: Enables the watermark module by default.
-- watermark_text: Default text prepended by the watermark module. An empty
-  string intentionally disables watermark output for the current run.
-- final_print: Whether the CLI prints its completion summary.
-
-module keys:
-- key: Stable snake_case API identifier. Do not rename without a migration.
-- config_key: Internal config.settings key used by legacy modules and presets.
-- name: Human-readable display name.
-- module: Lua require path for the processor module.
-- enabled: Default enabled state.
-- bit_position: Stable API bit position. Do not change when pipeline order
-  changes, because clients may persist bitkeys.
-- pipeline_order: Internal execution order. This may change to fix correctness
-  without changing API bitkeys.
-- cli.short / cli.long: CLI flags that enable only this module.
-- incompatible_with: Target runtimes where the module must be skipped. Valid
-  values are "lua", "luau", and "glua".
-- settings: Optional module-specific default settings copied into config.lua.
-- description: Human-readable description used by CLI help and API responses.
-- process: Optional adapter for modules whose process function needs settings.
-
-Tests may provide HERCULES_MANIFEST_EXTRA=/path/to/extra_manifest.lua. The extra
-file must return a table with optional output and modules keys. It is additive
-and exists only to verify that new modules are discovered consistently.
-]]
-
-local manifest = {}
+ local manifest = {}
 
 manifest.version = 1
 
+
 manifest.output = {
-    suffix = "_obfuscated.lua",
+    suffix = "obfuscated.lua",
     watermark_enabled = true,
-    watermark_text = "--[Obfuscated by Hercules v2.0.0 | hercules-obfuscator.xyz/discord | hercules-obfuscator.xyz/source]\n",
+    watermark_text = "--[Obfuscated by Goofuscator]\n",
     final_print = true,
 }
+
 
 manifest.presets = {
     {
